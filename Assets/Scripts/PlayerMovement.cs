@@ -39,8 +39,4 @@ public class PlayerMovement : MonoBehaviour
 
         rb.linearVelocity = movement * speed;
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-    }
 }

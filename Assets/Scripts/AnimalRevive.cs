@@ -17,21 +17,22 @@ public class AnimalRevive : MonoBehaviour
     {
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            animator.SetBool("Revived", true);
+            GameData.AnimalsRevived += 1;
             reviveSound.Play();
+            animator.SetBool("Revived", true);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        if (collision.gameObject.tag == "Player")
+        if (collision.CompareTag("Player"))
             playerInRange = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.CompareTag("Player"))
             playerInRange = false;
     }
 
