@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Mono.Cecil;
 using System.Collections;
+using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class WorldManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> animalPrefabs;
+    [SerializeField] private List<TileBase> tiles;
     [SerializeField] private GameObject resourcesPrefab;
     [SerializeField] private GameObject animalsParent;
     [SerializeField] private GameObject resourcesParent;
     [SerializeField] private GameObject player;
+    [SerializeField] private Tilemap tilemap;
 
     [SerializeField] private float worldSize = 100.0f;
     [SerializeField] private int worldBorderZone = 2; // range where spawn items and animal are not allowed
@@ -25,8 +29,17 @@ public class WorldManager : MonoBehaviour
     [SerializeField] private Text resourcesCount;
     [SerializeField] private Text animalsRevivedCount;
 
+    // for perlin noise
+    [SerializeField] private float scale = 10f;
+    private float offsetX = 1f;
+    private float offsetY = 1f;
+
     private void Start()
     {
+        offsetX = Random.Range(0f, 1000f);
+        offsetY = Random.Range(0f, 1000f);
+
+        TileMapGenerator();
         StartCoroutine(ResourcesSpawner());
         AnimalsSpawn();
     }
@@ -106,6 +119,33 @@ public class WorldManager : MonoBehaviour
                         
                     ++count;
                 }
+            }
+        }
+    }
+
+    private void TileMapGenerator()
+    {
+        // Perlin noise
+
+        if (tilemap == null || tiles == null)
+            return;
+
+        for (int y = -(int)worldSize; y <= worldSize; y++)
+        {
+            for (int x = -(int)worldSize; x <= worldSize; x++)
+            {
+                float perlinValue = Mathf.PerlinNoise((x + offsetX) / scale, (y + offsetX) / scale);
+
+                if (perlinValue >= 0.95 && perlinValue <= 1.0 || perlinValue >= 0.44 && perlinValue <= 0.50)
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tiles[Random.Range(0, tiles.Count)]);
+                else if (perlinValue >= 0 && perlinValue <= 0.05 || perlinValue >= 0.62 && perlinValue <= 0.66)
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tiles[Random.Range(0, tiles.Count)]);
+                else if (perlinValue >= 0.21 && perlinValue <= 0.25 || perlinValue >= 0.72 && perlinValue <= 0.79)
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tiles[Random.Range(0, tiles.Count)]);
+                else if (perlinValue >= 0.10 && perlinValue <= 0.15 || perlinValue >= 0.82 && perlinValue <= 0.86)
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tiles[Random.Range(0, tiles.Count)]);
+                else
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tiles[0]);
             }
         }
     }
