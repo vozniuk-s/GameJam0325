@@ -39,7 +39,7 @@ public class WorldManager : MonoBehaviour
         offsetX = Random.Range(0f, 1000f);
         offsetY = Random.Range(0f, 1000f);
 
-        TileMapGenerator();
+        //TileMapGenerator();
         StartCoroutine(ResourcesSpawner());
         AnimalsSpawn();
     }

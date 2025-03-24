@@ -150,6 +150,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reviveSound: {fileID: 3746530507019214846}
+  resourcesCanvas: {fileID: 0}
+  resourcesText: {fileID: 0}
+  minumumRequiredResources: 2
+  maximumRequiredResources: 4
 --- !u!82 &3746530507019214846
 AudioSource:
   m_ObjectHideFlags: 0
