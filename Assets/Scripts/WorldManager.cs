@@ -28,6 +28,7 @@ public class WorldManager : MonoBehaviour
 
     [SerializeField] private Text resourcesCount;
     [SerializeField] private Text animalsRevivedCount;
+    [SerializeField] private Text endText;
 
     // for perlin noise
     [SerializeField] private float scale = 10f;
@@ -39,7 +40,7 @@ public class WorldManager : MonoBehaviour
         offsetX = Random.Range(0f, 1000f);
         offsetY = Random.Range(0f, 1000f);
 
-        //TileMapGenerator();
+        TileMapGenerator();
         StartCoroutine(ResourcesSpawner());
         AnimalsSpawn();
     }
@@ -48,6 +49,26 @@ public class WorldManager : MonoBehaviour
     {
         resourcesCount.text = GameData.ResourcesCollected.ToString();
         animalsRevivedCount.text = GameData.AnimalsRevived.ToString();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (GameData.GameEnded)
+            {
+                Time.timeScale = 1f;
+
+                GameData.GameEnded = false;
+                GameData.AnimalsRevived = 0;
+                GameData.ResourcesCollected = 0;
+
+                FindAnyObjectByType<TimeBar>().Start();
+
+                player.transform.position = Vector3.zero;
+
+                endText.gameObject.SetActive(false);
+
+                Start();
+            }
+        }
     }
     private IEnumerator ResourcesSpawner()
     {
